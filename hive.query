@@ -1,0 +1,24 @@
+use <<database_name>>;
+create table data(shopid int,product string,price double)
+row format delimited
+fields terminated by ','
+stored as textfile;
+load data local inpath '/home/tilak/data.csv' into table data;
+
+create table dataone as select data.shopid,data.product,data.price,agg.total_cost
+from(
+select shopid,sum(price) as total_cost
+from test
+group by shopid
+)agg
+join test
+on agg.shopid=test.shopid;
+
+1: 
+select product,price,total_cost from dataone where shopid = '1';
+select shopid,total_cost from dataone where product IN ('teddy_bear''baby_powder');
+2:
+select product,price,total_cost,price from dataone where shopid = '6';
+select shopid,total_cost from dataone  where product IN 
+('scissor''bath_towel);
+ 
